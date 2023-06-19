@@ -1,0 +1,60 @@
+{
+  "$schema": "https://schema.management.azure.com/schemas/2018-05-01/subscriptionDeploymentTemplate.json#",
+  "contentVersion": "1.0.0.0",
+  "parameters": {
+    "listOfAllowedLocationsParameter": {
+      "type": "object",
+      "metadata": {
+        "comment": "Policy parameters should be provided as an object"
+      },
+      "defaultValue": {
+        "listOfAllowedLocations": {
+          "value":  ["Japan East","Japan West","Global"]
+        }
+      }
+    },
+    "listOfAllowedTenantsParameter": {
+      "type": "object",
+      "metadata": {
+        "comment": "Policy parameters should be provided as an object"
+      },
+      "defaultValue": {
+        "listOfAllowedTenants": {
+          "value":  ["f18370bf-eaa5-4a39-ab36-74d7be54e4d3"]
+        }
+      }
+    }
+  },
+  "resources": [
+    {
+      "type": "Microsoft.Authorization/policyAssignments",
+      "name": "許可されている場所",
+      "apiVersion": "2022-06-01",
+      "properties": {
+        "scope": "[subscription().Id]",
+        "policyDefinitionId": "/providers/Microsoft.Authorization/policyDefinitions/e56962a6-4747-49cd-b67b-bf8b01975c4c",
+        "nonComplianceMessages": [
+          {
+            "message": "グローバルリージョン、東日本リージョン、西日本リージョンへのデプロイのみ許可されています"
+          }
+        ],
+        "parameters": "[parameters('listOfAllowedLocationsParameter')]"
+      }
+    },
+    {
+      "type": "Microsoft.Authorization/policyAssignments",
+      "name": "Azure Lighthouse を使用してオンボードするテナント ID の管理を許可する",
+      "apiVersion": "2022-06-01",
+      "properties": {
+        "scope": "[subscription().Id]",
+        "policyDefinitionId": "/providers/Microsoft.Authorization/policyDefinitions/7a8a51a3-ad87-4def-96f3-65a1839242b6",
+        "nonComplianceMessages": [
+          {
+            "message": "Lighthouseの委任はfixer.co.jpテナントのみに許可されています"
+          }
+        ],
+        "parameters": "[parameters('listOfAllowedTenantsParameter')]"
+      }
+    }
+  ]
+}
