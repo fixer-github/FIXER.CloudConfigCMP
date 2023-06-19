@@ -1,20 +1,12 @@
 # ARMTemplate - DNS
 
 - 参考：https://learn.microsoft.com/ja-JP/azure/dns/dns-overview
-
-## テンプレート一覧
-
-- [AzureDNS_template.json](./AzureDNS_template.json)
-
-## テンプレート詳細
-
-### AzureDNS_template.json
-
-#### 概要
+- 
+## 概要
 
 - Azure DNS、A レコードをデプロイする
 
-#### デプロイ方法
+## デプロイ方法
 
 1. 以下の[Deploy to Azure]ボタンを押下
 2. 以下の各パラメータを指定

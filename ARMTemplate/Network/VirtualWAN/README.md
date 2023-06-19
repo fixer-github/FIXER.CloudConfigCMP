@@ -1,18 +1,10 @@
 # ARMTemplate - Virtual WAN
 
-## テンプレート一覧
-
-- [VirtualWAN_template.json](./VirtualWAN_template.json)
-
-## テンプレート詳細
-
-### VirtualWAN_template.json
-
-#### 概要
+## 概要
 
 - Virtual WAN、Virtual WAN ハブをデプロイする
 
-#### デプロイ方法
+## デプロイ方法
 
 1. 以下の[Deploy to Azure]ボタンを押下
 2. 以下の各パラメータを指定

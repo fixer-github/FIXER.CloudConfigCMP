@@ -1,20 +1,11 @@
 # ARMTemplate - Bastion
 
 - 参考：https://learn.microsoft.com/ja-jp/azure/bastion/bastion-overview
-
-## テンプレート一覧
-
-- [Bastion_template.json](./Bastion_template.json)
-
-## テンプレート詳細
-
-### Bastion_template.json
-
-#### 概要
+## 概要
 
 - Azure Bastion Host、仮想ネットワーク、サブネット、パブリック IP、ネットワークセキュリティグループをデプロイする
 
-#### デプロイ方法
+## デプロイ方法
 
 1. 以下の[Deploy to Azure]ボタンを押下
 2. 以下の各パラメータを指定
