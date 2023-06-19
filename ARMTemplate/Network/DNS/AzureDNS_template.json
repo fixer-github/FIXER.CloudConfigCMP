@@ -11,7 +11,7 @@
   "parameters": {
     "zoneName": {
       "type": "string",
-      "defaultValue": "[format('{0}.msp-demo.cloud-config.jp', uniqueString(resourceGroup().id))]",
+      "defaultValue": "[format('{0}.azure-sample.cloud-config.jp', uniqueString(resourceGroup().id))]",
       "metadata": {
         "description": "The name of the DNS zone to be created.  Must have at least 2 segments, e.g. hostname.org"
       }

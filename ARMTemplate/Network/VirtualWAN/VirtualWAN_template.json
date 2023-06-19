@@ -18,7 +18,7 @@
     },
     "vWanName": {
       "type": "string",
-      "defaultValue": "vevwanje",
+      "defaultValue": "SampleVwan",
       "metadata": {
         "description": "Name of the Virtual Wan."
       }
@@ -36,7 +36,7 @@
     },
     "hubName": {
       "type": "string",
-      "defaultValue": "vevwanhubje",
+      "defaultValue": "SampleVwanHub01",
       "metadata": {
         "description": "Name of the Virtual Hub. A virtual hub is created inside a virtual wan."
       }
