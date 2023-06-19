@@ -24,7 +24,7 @@
         "policyDefinitionId": "/providers/Microsoft.Authorization/policyDefinitions/7a8a51a3-ad87-4def-96f3-65a1839242b6",
         "nonComplianceMessages": [
           {
-            "message": "Lighthouseの委任はfixer.co.jpテナントのみに許可されています"
+            "message": "Lighthouseの委任は指定されたテナントIDのテナントにのみ許可されています"
           }
         ],
         "parameters": "[parameters('listOfAllowedTenantsParameter')]"

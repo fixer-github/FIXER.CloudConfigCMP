@@ -24,7 +24,7 @@
         "policyDefinitionId": "/providers/Microsoft.Authorization/policyDefinitions/e56962a6-4747-49cd-b67b-bf8b01975c4c",
         "nonComplianceMessages": [
           {
-            "message": "グローバルリージョン、東日本リージョン、西日本リージョンへのデプロイのみ許可されています"
+            "message": "Azureリソースのデプロイは指定されたリージョンへのみ許可されています"
           }
         ],
         "parameters": "[parameters('listOfAllowedLocationsParameter')]"
