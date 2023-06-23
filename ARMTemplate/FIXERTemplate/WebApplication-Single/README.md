@@ -22,4 +22,4 @@
    - `Sku`：App Service Plan の SKU（Standard S1：S1）
 3. 内容に問題がなければ、[確認と作成]からデプロイを実行
 
-[![Deploy to Azure](https://aka.ms/deploytoazurebutton)](https://portal.azure.com/#create/Microsoft.Template/uri/)
+[![Deploy to Azure](https://aka.ms/deploytoazurebutton)](https://portal.azure.com/#create/Microsoft.Template/uri/https%3A%2F%2Fraw.githubusercontent.com%2Ffixer-github%2FFIXER.CloudConfigCMP%2Fdevelop%2FARMTemplate%2FFIXERTemplate%2FWebApplication-Single%2Ftemplate.json)
