@@ -8,6 +8,10 @@
   - Applicatio Insights
   - Log Analytics ワークスペース
 
+## 構成図
+
+![WebApplication-Single 構成図](./WebApplication-Single.png)
+
 ## デプロイ方法
 
 1. 以下の[Deploy to Azure]ボタンを押下
