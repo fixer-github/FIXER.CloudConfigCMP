@@ -1,0 +1,125 @@
+{
+  "$schema": "https://schema.management.azure.com/schemas/2018-05-01/subscriptionDeploymentTemplate.json#",
+  "contentVersion": "1.0.0.0",
+  "parameters": {
+    "environment": {
+        "type": "string",
+        "defaultValue": "ve",
+        "metadata": {
+          "description": "環境名(本番:pr、ステージング:st、開発:dv、検証:ve)"
+        }
+    },
+    "projectPrefix": {
+        "type": "string",
+        "defaultValue": "armtest",
+        "metadata": {
+          "description": "プロジェクト名"
+        }
+    },
+    "primaryLocationName": {
+        "type": "string",
+        "defaultValue": "japaneast"
+    },
+    "secondaryLocationName": {
+        "type": "string",
+        "defaultValue": "japanwest"
+    },
+    "primaryLocationCode": {
+        "type": "string",
+        "defaultValue": "je"
+    },
+    "secondaryLocationCode": {
+        "type": "string",
+        "defaultValue": "jw"
+    },
+    "listOfAllowedLocationsParameter": {
+      "type": "object",
+      "metadata": {
+        "comment": "Policy parameters should be provided as an object"
+      },
+      "defaultValue": {
+        "listOfAllowedLocations": {
+          "value":  ["Japan East","Japan West","Global"]
+        }
+      }
+    },
+    "listOfAllowedTenantsParameter": {
+      "type": "object",
+      "metadata": {
+        "comment": "Policy parameters should be provided as an object"
+      },
+      "defaultValue": {
+        "listOfAllowedTenants": {
+          "value":  ["xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx"]
+        }
+      }
+    }
+  },
+  "variables": {
+    "globalResourceGroupName": "[concat(parameters('environment'),parameters('projectPrefix'))]",
+    "primaryResourceGroupName": "[concat(parameters('environment'),parameters('projectPrefix'),parameters('primaryLocationCode'))]",
+    "secondaryResourceGroupName": "[concat(parameters('environment'),parameters('projectPrefix'),parameters('secondaryLocationCode'))]"
+  },
+  "resources": [
+    {
+      "type": "Microsoft.Authorization/policyAssignments",
+      "name": "許可されている場所",
+      "apiVersion": "2022-06-01",
+      "properties": {
+        "scope": "[subscription().Id]",
+        "policyDefinitionId": "/providers/Microsoft.Authorization/policyDefinitions/e56962a6-4747-49cd-b67b-bf8b01975c4c",
+        "nonComplianceMessages": [
+          {
+            "message": "Azureリソースのデプロイは指定されたリージョンへのみ許可されています"
+          }
+        ],
+        "parameters": "[parameters('listOfAllowedLocationsParameter')]"
+      }
+    },
+    {
+      "type": "Microsoft.Authorization/policyAssignments",
+      "name": "Azure Lighthouse を使用してオンボードするテナント ID の管理を許可する",
+      "apiVersion": "2022-06-01",
+      "properties": {
+        "scope": "[subscription().Id]",
+        "policyDefinitionId": "/providers/Microsoft.Authorization/policyDefinitions/7a8a51a3-ad87-4def-96f3-65a1839242b6",
+        "nonComplianceMessages": [
+          {
+            "message": "Lighthouseの委任は指定されたテナントIDのテナントにのみ許可されています"
+          }
+        ],
+        "parameters": "[parameters('listOfAllowedTenantsParameter')]"
+      }
+    },
+    {
+      "type": "Microsoft.Resources/resourceGroups",
+      "apiVersion": "2022-09-01",
+      "name": "[variables('globalResourceGroupName')]",
+      "location": "[parameters('primaryLocationName')]",
+      "properties": {},
+      "dependsOn": [
+        "許可されている場所"
+      ]
+    },
+    {
+      "type": "Microsoft.Resources/resourceGroups",
+      "apiVersion": "2022-09-01",
+      "name": "[variables('primaryResourceGroupName')]",
+      "location": "[parameters('primaryLocationName')]",
+      "properties": {},
+      "dependsOn": [
+        "許可されている場所"
+      ]
+    },
+    {
+      "type": "Microsoft.Resources/resourceGroups",
+      "apiVersion": "2022-09-01",
+      "name": "[variables('secondaryResourceGroupName')]",
+      "location": "[parameters('secondaryLocationName')]",
+      "properties": {},
+      "dependsOn": [
+        "許可されている場所"
+      ]
+    }
+  ]
+}
