@@ -5,7 +5,7 @@
 - 以下のリソースをデプロイする
   - App Service Plan
   - App Service
-  - Applicatio Insights
+  - Application Insights
   - Log Analytics ワークスペース
 
 ## 構成図
