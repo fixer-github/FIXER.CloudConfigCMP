@@ -1,0 +1,255 @@
+{
+  "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
+  "contentVersion": "1.0.0.0",
+  "parameters": {
+    "environment": {
+      "type": "string",
+      "defaultValue": "ve",
+      "metadata": {
+        "description": "環境名(本番:pr、ステージング:st、開発:dv、検証:ve)"
+      }
+    },
+    "projectPrefix": {
+      "type": "string",
+      "defaultValue": "armtest",
+      "metadata": {
+        "description": "プロジェクト名"
+      }
+    },
+    "locationName": {
+      "type": "string",
+      "defaultValue": "japaneast"
+    },
+    "locationCode": {
+      "type": "string",
+      "defaultValue": "je"
+    },
+    "sku": {
+      "type": "string",
+      "defaultValue": "S1",
+      "metadata": {
+        "description": "The SKU of App Service Plan."
+      }
+    },
+    "administratorLogin": {
+      "type": "string",
+      "metadata": {
+        "description": "管理者ユーザ名"
+      }
+    },
+    "administratorLoginPassword": {
+      "type": "securestring",
+      "metadata": {
+        "description": "管理者ユーザパスワード"
+      }
+    },
+    "databaseName": {
+      "type": "string",
+      "metadata": {
+        "description": "データベース名"
+      }
+    },
+    "collation": {
+      "type": "string",
+      "defaultValue": "Japanese_XJIS_140_CS_AS_KS_WS_VSS",
+      "metadata": {
+        "description": "SQL Databaseの照合順序"
+      }
+    },
+    "edition": {
+      "type": "string",
+      "defaultValue": "Basic",
+      "allowedValues": [
+        "Basic",
+        "Standard",
+        "Premium"
+      ],
+      "metadata": {
+        "description": "The type of database to create."
+      }
+    },
+    "maxSizeBytes": {
+      "type": "string",
+      "defaultValue": "1073741824",
+      "metadata": {
+        "description": "The maximum size, in bytes, for the database"
+      }
+    },
+    "requestedServiceObjectiveName": {
+      "type": "string",
+      "defaultValue": "Basic",
+      "allowedValues": [
+        "Basic",
+        "S0",
+        "S1",
+        "S2",
+        "P1",
+        "P2",
+        "P3"
+      ],
+      "metadata": {
+        "description": "Describes the performance level for Edition"
+      }
+    }
+  },
+  "variables": {
+    "appServicePlanName": "[concat(parameters('environment'),parameters('projectPrefix'),parameters('locationCode'))]",
+    "appServiceName": "[concat(parameters('environment'),parameters('projectPrefix'),'web',parameters('locationCode'))]",
+    "logAnalyticsName": "[concat(parameters('environment'),parameters('projectPrefix'),parameters('locationCode'))]",
+    "sqlserverName": "[concat(parameters('environment'),parameters('projectPrefix'),parameters('locationCode'))]"
+  },
+  "resources": [
+    {
+      "name": "[variables('sqlserverName')]",
+      "type": "Microsoft.Sql/servers",
+      "location": "[parameters('locationName')]",
+      "tags": {
+        "displayName": "SqlServer"
+      },
+      "apiVersion": "2020-08-01-preview",
+      "properties": {
+        "administratorLogin": "[parameters('administratorLogin')]",
+        "administratorLoginPassword": "[parameters('administratorLoginPassword')]",
+        "version": "12.0"
+      },
+      "resources": [
+        {
+          "name": "[parameters('databaseName')]",
+          "type": "databases",
+          "location": "[parameters('locationName')]",
+          "tags": {
+            "displayName": "Database"
+          },
+          "apiVersion": "2020-02-02-preview",
+          "dependsOn": [
+            "[resourceId('Microsoft.Sql/servers/', variables('sqlserverName'))]"
+          ],
+          "properties": {
+            "edition": "[parameters('edition')]",
+            "collation": "[parameters('collation')]",
+            "maxSizeBytes": "[parameters('maxSizeBytes')]",
+            "requestedServiceObjectiveName": "[parameters('requestedServiceObjectiveName')]"
+          }
+        },
+        {
+          "type": "firewallrules",
+          "apiVersion": "2014-04-01-preview",
+          "dependsOn": [
+            "[resourceId('Microsoft.Sql/servers/', variables('sqlserverName'))]"
+          ],
+          "location": "[parameters('locationName')]",
+          "name": "AllowAllWindowsAzureIps",
+          "properties": {
+            "endIpAddress": "0.0.0.0",
+            "startIpAddress": "0.0.0.0"
+          }
+        }
+      ]
+    },
+    {
+      "type": "Microsoft.OperationalInsights/workspaces",
+      "apiVersion": "2020-08-01",
+      "name": "[variables('logAnalyticsName')]",
+      "location": "[parameters('locationName')]",
+      "properties": {
+        "sku": {
+          "name": "PerGB2018"
+        },
+        "retentionInDays": 120,
+        "features": {
+          "searchVersion": 1,
+          "legacy": 0,
+          "enableLogAccessUsingOnlyResourcePermissions": true
+        }
+      }
+    },
+    {
+      "apiVersion": "2015-08-01",
+      "name": "[variables('appServicePlanName')]",
+      "type": "Microsoft.Web/serverfarms",
+      "location": "[parameters('locationName')]",
+      "tags": {
+        "displayName": "HostingPlan"
+      },
+      "sku": {
+        "name": "[parameters('sku')]"
+      },
+      "properties": {
+        "name": "[variables('appServicePlanName')]"
+      }
+    },
+    {
+      "apiVersion": "2015-08-01",
+      "name": "[variables('appServiceName')]",
+      "type": "Microsoft.Web/sites",
+      "location": "[parameters('locationName')]",
+      "dependsOn": [
+        "[resourceId('Microsoft.Web/serverFarms/', variables('appServicePlanName'))]"
+      ],
+      "properties": {
+         "siteConfig": {
+          "alwaysOn": true,
+          "http20Enabled": true,
+          "minTlsVersion": "1.2",
+          "use32BitWorkerProcess": false
+        },
+        "serverFarmId": "[resourceId('Microsoft.Web/serverfarms', variables('appServicePlanName'))]",
+        "httpsOnly": true
+      },
+      "resources": [
+        {
+          "apiVersion": "2015-08-01",
+          "type": "config",
+          "name": "connectionstrings",
+          "dependsOn": [
+            "[resourceId('Microsoft.Web/Sites/', variables('appServiceName'))]",
+            "[resourceId('Microsoft.Sql/servers/', variables('sqlserverName'))]",
+            "[resourceId('Microsoft.Web/sites/siteextensions', variables('appServiceName'), 'Microsoft.ApplicationInsights.AzureWebSites')]"
+          ],
+          "properties": {
+            "DefaultConnection": {
+              "value": "[concat('Server=tcp:', reference(resourceId('Microsoft.Sql/servers/', variables('sqlserverName'))).fullyQualifiedDomainName, ',1433;Initial Catalog=', parameters('databaseName'), ';User Id=', parameters('administratorLogin'),';Password=', parameters('administratorLoginPassword'), ';')]",
+              "type": "SQLAzure"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "type": "Microsoft.Web/sites/config",
+      "apiVersion": "2020-06-01",
+      "name": "[format('{0}/{1}', variables('appServiceName'), 'appsettings')]",
+      "properties": {
+        "APPINSIGHTS_INSTRUMENTATIONKEY": "[reference(resourceId('Microsoft.Insights/components', variables('appServiceName'))).InstrumentationKey]"
+      },
+      "dependsOn": [
+        "[resourceId('Microsoft.Insights/components', variables('appServiceName'))]",
+        "[resourceId('Microsoft.Web/sites', variables('appServiceName'))]",
+        "[resourceId('Microsoft.Web/sites/siteextensions', variables('appServiceName'), 'Microsoft.ApplicationInsights.AzureWebSites')]"
+      ]
+    },
+    {
+      "type": "Microsoft.Web/sites/siteextensions",
+      "apiVersion": "2021-03-01",
+      "name": "[format('{0}/{1}', variables('appServiceName'), 'Microsoft.ApplicationInsights.AzureWebSites')]",
+      "dependsOn": [
+        "[resourceId('Microsoft.Insights/components', variables('appServiceName'))]",
+        "[resourceId('Microsoft.Web/sites', variables('appServiceName'))]"
+      ]
+    },
+    {
+      "type": "Microsoft.Insights/components",
+      "apiVersion": "2020-02-02",
+      "name": "[variables('appServiceName')]",
+      "location": "[parameters('locationName')]",
+      "kind": "string",
+      "properties": {
+        "Application_Type": "web",
+        "WorkspaceResourceId": "[resourceId('Microsoft.OperationalInsights/workspaces', variables('logAnalyticsName'))]"
+      },
+      "dependsOn": [
+        "[resourceId('Microsoft.OperationalInsights/workspaces', variables('logAnalyticsName'))]"
+      ]
+    }
+  ]
+}
