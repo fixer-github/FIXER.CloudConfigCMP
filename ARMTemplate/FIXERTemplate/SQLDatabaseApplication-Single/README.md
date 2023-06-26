@@ -12,7 +12,7 @@
 
 ## 構成図
 
-![WebApplication-Single 構成図](./WebApplication-Single.png)
+![SQLDatabaseApplication-Single 構成図](./SQLDatabaseApplication-Single.png)
 
 ## デプロイ方法
 
