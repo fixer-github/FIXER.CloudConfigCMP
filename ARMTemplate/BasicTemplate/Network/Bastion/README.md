@@ -5,6 +5,10 @@
 
 - Azure Bastion Host、仮想ネットワーク、サブネット、パブリック IP、ネットワークセキュリティグループをデプロイする
 
+## 構成図
+
+![Bastion 構成図](./Bastion.png)
+
 ## デプロイ方法
 
 1. 以下の[Deploy to Azure]ボタンを押下
