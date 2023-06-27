@@ -25,4 +25,4 @@
    - `Resource Group Location`：リソースグループのデプロイ先のリージョンを指定(東日本:japaneast)
 3. 内容に問題がなければ、[確認と作成]からデプロイを実行
  
-[![Deploy to Azure](https://aka.ms/deploytoazurebutton)](https://portal.azure.com/#create/Microsoft.Template/uri/)
+[![Deploy to Azure](https://aka.ms/deploytoazurebutton)](https://portal.azure.com/#create/Microsoft.Template/uri/https%3A%2F%2Fraw.githubusercontent.com%2Ffixer-github%2FFIXER.CloudConfigCMP%2Fdevelop%2FARMTemplate%2FFIXERTemplate%2FBaseLine%2FPolicy_ResourceGroup_template.json)
