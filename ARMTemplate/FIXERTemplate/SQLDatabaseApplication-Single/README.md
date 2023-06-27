@@ -25,7 +25,9 @@
    - `Project Prefix`：プロジェクト名
    - `Location Name`：デプロイ先のリージョンの名前（東日本：japaneast）
    - `Location Code`：デプロイ先のリージョンの略称（東日本：je）
-   - `Sku`：App Service Plan の SKU（Standard S1：S1）
+   - `App Service Sku Name`：App Service Plan の SKU（Standard S1：S1）
+   - `Storage Account Kind`：ストレージアカウントの種別(標準v2：StandardV2)
+   - `Storage Account Sku Name`：ストレージアカウントのSKU（Standard_LRS、Premium_LRS、Standard_ZRS、Standard_GRS）
    - `Administrator Login`：SQL Server の管理者ユーザ名
    - `Administrator Login Password`：SQL Server の管理者ユーザパスワード
    - `Database Name`：データベース名
