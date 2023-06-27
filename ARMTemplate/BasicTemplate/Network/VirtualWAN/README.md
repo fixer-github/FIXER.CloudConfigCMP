@@ -4,6 +4,10 @@
 
 - Virtual WAN、Virtual WAN ハブをデプロイする
 
+## 構成図
+
+![VirtualWAN 構成図](./VirtualWAN.png)
+
 ## デプロイ方法
 
 1. 以下の[Deploy to Azure]ボタンを押下
