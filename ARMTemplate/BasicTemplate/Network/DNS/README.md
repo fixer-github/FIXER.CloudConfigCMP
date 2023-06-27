@@ -1,10 +1,14 @@
 # ARMTemplate - DNS
 
 - 参考：https://learn.microsoft.com/ja-JP/azure/dns/dns-overview
-- 
+
 ## 概要
 
 - Azure DNS、A レコードをデプロイする
+ 
+## 構成図
+
+![DNS 構成図](./DNS.png)
 
 ## デプロイ方法
 
