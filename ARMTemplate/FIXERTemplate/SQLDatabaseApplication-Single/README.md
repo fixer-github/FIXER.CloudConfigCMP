@@ -7,6 +7,8 @@
   - App Service
   - Application Insights
   - Log Analytics ワークスペース
+  - ストレージアカウント
+  - Blob コンテナ
   - SQL Server
   - SQL Database
 
